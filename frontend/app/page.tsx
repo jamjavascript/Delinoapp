@@ -12,6 +12,7 @@ export default function Home() {
   const [categories, setCategories] = useState<Category[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<string | undefined>();
   const [isLoading, setIsLoading] = useState(true);
+  const [isRefreshing, setIsRefreshing] = useState(false);
   const [lastUpdated, setLastUpdated] = useState<string>('');
   const [error, setError] = useState<string | null>(null);
 
@@ -36,14 +37,12 @@ export default function Home() {
     setIsLoading(true);
     setError(null);
     try {
-      console.log('Fetching products for category:', selectedCategory);
       const data: TrendingProductsResponse = await productApi.getTrendingProducts(selectedCategory);
-      console.log('Products fetched:', data);
       setProducts(data.products);
       setLastUpdated(data.last_updated);
     } catch (err: any) {
       console.error('Error fetching products:', err);
-      const errorMessage = err.response?.data?.detail || err.message || 'Failed to fetch products';
+      const errorMessage = err.message || 'Failed to fetch products';
       console.error('Error details:', errorMessage);
       setError(errorMessage);
     } finally {
@@ -51,20 +50,28 @@ export default function Home() {
     }
   };
 
+  const refreshProducts = async () => {
+    setIsRefreshing(true);
+    setError(null);
+    try {
+      await productApi.refreshProducts();
+      await fetchProducts();
+      await fetchCategories();
+    } catch (err: any) {
+      console.error('Error refreshing products:', err);
+      setError(err.message || 'Failed to refresh products');
+    } finally {
+      setIsRefreshing(false);
+    }
+  };
 
   const loadSampleData = async () => {
     setIsLoading(true);
     setError(null);
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/products/sample-data`, {
-        method: 'POST',
-      });
-      if (response.ok) {
-        await fetchProducts();
-        await fetchCategories();
-      } else {
-        throw new Error('Failed to load sample data');
-      }
+      await productApi.loadSampleData();
+      await fetchProducts();
+      await fetchCategories();
     } catch (err: any) {
       console.error('Error loading sample data:', err);
       setError('Failed to load sample data');
@@ -87,6 +94,13 @@ export default function Home() {
                 {lastUpdated && `Last updated: ${format(new Date(lastUpdated), 'MMM d, yyyy HH:mm')}`}
               </p>
             </div>
+            <button
+              onClick={refreshProducts}
+              disabled={isRefreshing}
+              className="bg-blue-600 hover:bg-blue-700 disabled:bg-blue-300 text-white px-4 py-2 rounded-lg text-sm font-medium"
+            >
+              {isRefreshing ? 'Refreshing...' : 'Refresh Products'}
+            </button>
           </div>
         </div>
       </header>

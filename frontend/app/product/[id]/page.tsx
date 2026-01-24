@@ -11,6 +11,7 @@ export default function ProductDetail() {
   const params = useParams();
   const router = useRouter();
   const id = params.id as string;
+  const numericId = Number(id);
 
   const [product, setProduct] = useState<ProductWithHistory | null>(null);
   const [priceHistory, setPriceHistory] = useState<PriceHistoryPoint[]>([]);
@@ -18,21 +19,27 @@ export default function ProductDetail() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    if (Number.isNaN(numericId)) {
+      setError('Invalid product ID');
+      setIsLoading(false);
+      return;
+    }
+
     if (id) {
       fetchProductDetails();
       fetchPriceHistory();
     }
-  }, [id]);
+  }, [id, numericId]);
 
   const fetchProductDetails = async () => {
     setIsLoading(true);
     setError(null);
     try {
-      const data = await productApi.getProductById(parseInt(id));
+      const data = await productApi.getProductById(numericId);
       setProduct(data);
     } catch (err: any) {
       console.error('Error fetching product:', err);
-      setError(err.response?.data?.detail || 'Failed to fetch product details');
+      setError(err.message || 'Failed to fetch product details');
     } finally {
       setIsLoading(false);
     }
@@ -40,7 +47,7 @@ export default function ProductDetail() {
 
   const fetchPriceHistory = async () => {
     try {
-      const data = await productApi.getPriceHistory(parseInt(id));
+      const data = await productApi.getPriceHistory(numericId);
       setPriceHistory(data);
     } catch (err) {
       console.error('Error fetching price history:', err);
@@ -121,7 +128,7 @@ export default function ProductDetail() {
 
               {/* Price */}
               <div className="mb-6">
-                {product.current_price ? (
+                {product.current_price !== undefined && product.current_price !== null ? (
                   <div className="text-4xl font-bold text-gray-900">
                     ${product.current_price.toFixed(2)}
                     <span className="text-lg text-gray-500 ml-2">{product.currency}</span>

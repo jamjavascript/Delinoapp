@@ -38,7 +38,7 @@ export default function ProductCard({ product }: ProductCardProps) {
 
           {/* Price */}
           <div className="mt-auto">
-            {product.current_price ? (
+            {product.current_price !== undefined && product.current_price !== null ? (
               <p className="text-2xl font-bold text-gray-900">
                 ${product.current_price.toFixed(2)}
                 <span className="text-sm text-gray-500 ml-1">{product.currency}</span>

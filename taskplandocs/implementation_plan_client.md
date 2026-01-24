@@ -1,4 +1,4 @@
-# Delinoapp Implementation Plan
+# Delinoapp Implementation Plan (Client Copy)
 
 ## Executive Summary
 Delinoapp is a full-stack product tracking application (FastAPI + Next.js + PostgreSQL).

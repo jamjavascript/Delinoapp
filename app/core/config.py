@@ -15,7 +15,7 @@ class Settings(BaseSettings):
     allowed_origins: list[str] = ["http://localhost:3000", "http://localhost:8000"]
 
     # Database settings
-    DATABASE_URL: str = "postgresql+psycopg://postgres:postgres@localhost:5432/delinoapp"
+    DATABASE_URL: str = "postgresql+psycopg://delinoapp:delinoapp@localhost:5432/delinoapp"
     DEBUG: bool = False
 
     # External data source (DummyJSON)
@@ -23,6 +23,7 @@ class Settings(BaseSettings):
 
     # Scheduler settings
     product_refresh_hours: int = 6
+    scheduler_enabled: bool = True
 
     class Config:
         env_file = ".env"

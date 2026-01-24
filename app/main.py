@@ -10,9 +10,11 @@ from app.services.scheduler import ProductScheduler
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     scheduler = ProductScheduler()
-    scheduler.start()
+    if settings.scheduler_enabled:
+        scheduler.start()
     yield
-    scheduler.shutdown()
+    if settings.scheduler_enabled:
+        scheduler.shutdown()
 
 
 app = FastAPI(

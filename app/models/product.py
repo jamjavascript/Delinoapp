@@ -10,6 +10,7 @@ class Product(Base):
     __tablename__ = "products"
 
     id = Column(Integer, primary_key=True, index=True)
+    asin = Column(String, nullable=False, unique=True, index=True)
     title = Column(String, nullable=False)
     description = Column(Text, nullable=True)
     current_price = Column(Float, nullable=True)

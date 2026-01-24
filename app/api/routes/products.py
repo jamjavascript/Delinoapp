@@ -193,11 +193,16 @@ async def populate_sample_data(db: Session = Depends(get_db)):
                 db.add(category_obj)
                 db.flush()
 
-            # Check if product with the same title exists
-            existing_product = db.query(ProductModel).filter(ProductModel.title == product_data["title"]).first()
+            asin = product_data.pop("asin", None) or f"sample-{updated_count + 1}"
+
+            # Check if product with the same asin/title exists
+            existing_product = db.query(ProductModel).filter(ProductModel.asin == asin).first()
+            if not existing_product:
+                existing_product = db.query(ProductModel).filter(ProductModel.title == product_data["title"]).first()
 
             if existing_product:
                 # Update existing product
+                existing_product.asin = asin
                 for key, value in product_data.items():
                     setattr(existing_product, key, value)
                 existing_product.category_id = category_obj.id
@@ -212,6 +217,7 @@ async def populate_sample_data(db: Session = Depends(get_db)):
             else:
                 # Create new product
                 new_product = ProductModel(
+                    asin=asin,
                     **product_data,
                     category_id=category_obj.id
                 )

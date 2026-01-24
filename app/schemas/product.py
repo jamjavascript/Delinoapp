@@ -45,6 +45,7 @@ class PriceHistory(PriceHistoryBase):
 
 class ProductBase(BaseModel):
     """Base product schema"""
+    asin: Optional[str] = None
     title: str
     description: Optional[str] = None
     current_price: Optional[float] = None
@@ -71,6 +72,7 @@ class ProductUpdate(BaseModel):
 class Product(ProductBase):
     """Product response schema"""
     id: int
+    asin: str
     category_id: Optional[int] = None
     category: Optional[Category] = None
     created_at: datetime

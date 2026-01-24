@@ -57,11 +57,15 @@ class ProductDataFetcher:
 
         price = raw_data.get("price")
         product_id = raw_data.get("id")
+        asin = None
+        if product_id is not None:
+            asin = f"dummyjson-{product_id}"
         product_url = None
         if product_id is not None:
             product_url = f"{self.base_url}/products/{product_id}"
 
         return {
+            "asin": asin,
             "title": str(title).strip(),
             "description": raw_data.get("description"),
             "current_price": float(price) if price is not None else None,
@@ -88,13 +92,10 @@ class ProductDataFetcher:
                 db.add(category_obj)
                 db.flush()
 
-            product_url = product_data.get("product_url")
-            if product_url:
-                existing_product = (
-                    db.query(ProductModel).filter(ProductModel.product_url == product_url).first()
-                )
-            else:
-                existing_product = None
+            existing_product = None
+            asin = product_data.get("asin")
+            if asin:
+                existing_product = db.query(ProductModel).filter(ProductModel.asin == asin).first()
 
             if not existing_product:
                 existing_product = (
@@ -105,6 +106,8 @@ class ProductDataFetcher:
             currency = product_data.get("currency", "USD")
 
             if existing_product:
+                if asin:
+                    existing_product.asin = asin
                 existing_product.title = product_data.get("title", existing_product.title)
                 existing_product.description = product_data.get("description", existing_product.description)
                 existing_product.image_url = product_data.get("image_url", existing_product.image_url)
@@ -123,6 +126,7 @@ class ProductDataFetcher:
                     db.add(price_history)
             else:
                 new_product = ProductModel(
+                    asin=asin or product_data.get("title"),
                     title=product_data.get("title"),
                     description=product_data.get("description"),
                     current_price=current_price,

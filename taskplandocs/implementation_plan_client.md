@@ -9,6 +9,14 @@ Expected Date: Jan 26 2026
 **Note on Data Sources:** We are currently using a fake public API (DummyJSON) for product data.
 Once real API credentials are available, we will switch and provide the full integration details.
 
+## Status Update (Jan 24, 2026)
+
+- Phase 1: Completed (database, refresh endpoint, scheduler).
+- Phase 2: Completed (frontend wired to backend with loading/error states).
+- Phase 3: In progress (backend tests added; frontend tests require setup).
+- Phase 4: Not started.
+- Phase 5: Not started.
+
 ---
 Here are the phases I will be able to deliver the app :
 

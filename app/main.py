@@ -1,13 +1,25 @@
+from contextlib import asynccontextmanager
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.core.config import settings
 from app.api.routes import health, items, products
+from app.services.scheduler import ProductScheduler
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    scheduler = ProductScheduler()
+    scheduler.start()
+    yield
+    scheduler.shutdown()
 
 
 app = FastAPI(
     title=settings.app_name,
     version=settings.app_version,
     debug=settings.debug,
+    lifespan=lifespan,
 )
 
 # Configure CORS

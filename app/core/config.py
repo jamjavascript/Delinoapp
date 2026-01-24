@@ -18,6 +18,12 @@ class Settings(BaseSettings):
     DATABASE_URL: str = "postgresql+psycopg://postgres:postgres@localhost:5432/delinoapp"
     DEBUG: bool = False
 
+    # External data source (DummyJSON)
+    dummyjson_base_url: str = "https://dummyjson.com"
+
+    # Scheduler settings
+    product_refresh_hours: int = 6
+
     class Config:
         env_file = ".env"
         case_sensitive = False

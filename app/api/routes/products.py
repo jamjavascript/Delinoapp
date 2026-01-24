@@ -6,6 +6,7 @@ from datetime import datetime
 
 from app.models import get_db, Product as ProductModel, Category as CategoryModel, PriceHistory as PriceHistoryModel
 from app.schemas import Product, ProductWithHistory, TrendingProductsResponse, Category
+from app.services.data_fetcher import ProductDataFetcher
 
 router = APIRouter(prefix="/products", tags=["products"])
 
@@ -106,6 +107,22 @@ async def get_categories(db: Session = Depends(get_db)):
     """Get all available categories"""
     categories = db.query(CategoryModel).all()
     return categories
+
+
+@router.post("/refresh")
+async def refresh_products(
+    limit: int = Query(10, ge=1, le=50, description="Products per category"),
+    db: Session = Depends(get_db),
+):
+    """
+    Fetch products from DummyJSON and refresh database records.
+    """
+    fetcher = ProductDataFetcher()
+    try:
+        result = await fetcher.refresh_products(db=db, limit=limit)
+        return {"status": "success", **result}
+    except Exception as exc:
+        raise HTTPException(status_code=500, detail=f"Refresh failed: {exc}")
 
 
 @router.post("/sample-data", status_code=201)

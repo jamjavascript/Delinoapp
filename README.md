@@ -45,7 +45,7 @@ A modern full-stack web application built with FastAPI (backend), Next.js (front
 
 - **Python**: 3.9 or higher
 - **Node.js**: 18.x or higher
-- **PostgreSQL**: 14.x or higher
+- **PostgreSQL**: 14.x or higher (or Docker)
 
 ## 📦 Installation
 
@@ -76,7 +76,7 @@ cp .env.example .env
 Edit `.env` and add your credentials:
 ```env
 # Database
-DATABASE_URL=postgresql://postgres:yourpassword@localhost:5432/products_db
+DATABASE_URL=postgresql+psycopg://delinoapp:delinoapp@localhost:5432/delinoapp
 ```
 
 ### Frontend Setup
@@ -91,20 +91,21 @@ cd frontend
 npm install
 ```
 
-3. **Environment is already configured** in `.env.local`
+3. **Create frontend env file**:
+```bash
+touch .env.local
+```
+
+Add:
+```env
+NEXT_PUBLIC_API_URL=http://localhost:8000/api/v1
+```
 
 ### Database Setup
 
-1. **Create the database**:
+1. **Start the database with Docker**:
 ```bash
-# Connect to PostgreSQL
-psql -U postgres
-
-# Create database
-CREATE DATABASE products_db;
-
-# Exit psql
-\q
+docker-compose up -d
 ```
 
 2. **Run database migrations**:
@@ -125,10 +126,16 @@ alembic upgrade head
 
 Default connection string:
 ```
-postgresql://postgres:postgres@localhost:5432/products_db
+postgresql+psycopg://delinoapp:delinoapp@localhost:5432/delinoapp
 ```
 
 Modify in `.env` if your PostgreSQL setup is different.
+
+Scheduler settings:
+```
+PRODUCT_REFRESH_HOURS=6
+SCHEDULER_ENABLED=true
+```
 
 ## 🚀 Running the Application
 
@@ -160,10 +167,11 @@ Once the backend is running, access interactive API docs:
 ### Available Endpoints
 
 #### Products
-- `GET /api/v1/products` - Get all products
-- `GET /api/v1/products/{category}` - Get products by category
+- `GET /api/v1/products/trending` - Get products (optional `category` query)
 - `GET /api/v1/products/{id}` - Get product details
+- `GET /api/v1/products/{id}/price-history` - Get price history
 - `POST /api/v1/products/refresh` - Manually refresh data
+- `POST /api/v1/products/sample-data` - Seed sample data
 
 #### Categories
 - `GET /api/v1/products/categories/list` - Get all categories
@@ -174,7 +182,7 @@ Once the backend is running, access interactive API docs:
 ## 📁 Project Structure
 
 ```
-FastAPILeno/
+Delinoapp/
 ├── app/
 │   ├── main.py                      # FastAPI application
 │   ├── api/

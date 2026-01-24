@@ -3,7 +3,8 @@
 ## Executive Summary
 I have setup the repo and added docker for the database usage and easy to use.
 
-**Estimated Total Effort:** 30 hours
+**Estimated Total Effort:** 2-3 days 
+Expected Date: Jan 26 2026 
 
 **Note on Data Sources:** We are currently using a fake public API (DummyJSON) for product data.
 Once real API credentials are available, we will switch and provide the full integration details.

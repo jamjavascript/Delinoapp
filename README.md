@@ -157,6 +157,11 @@ npm run dev
 
 Frontend will be available at: `http://localhost:3000`
 
+## 🚀 Deployment (Vercel)
+
+This project uses Vercel Git integration for CI/CD with `development` as the
+production branch. See `DEPLOYMENT.md` for configuration details.
+
 ## 📚 API Documentation
 
 Once the backend is running, access interactive API docs:

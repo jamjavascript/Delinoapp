@@ -74,9 +74,8 @@ This implementation plan outlines the step-by-step approach to complete the Deli
 **Steps:**
 
 1. **Choose Data Source:**
-   - Option A: RapidAPI (Product Data API, Real-Time Amazon Data)
-   - Option B: Amazon Product Advertising API (requires approval)
-   - Option C: Mock data generator (for development/testing)
+   - **Selected:** DummyJSON Products API (free, no auth)  
+     https://dummyjson.com/docs/products
 
 2. **Create Data Fetcher Service:**
    ```bash
@@ -87,21 +86,19 @@ This implementation plan outlines the step-by-step approach to complete the Deli
 3. **Implement `data_fetcher.py`:**
    ```python
    # Core functions to implement:
+   - fetch_categories() -> List[str]
    - fetch_products(category: str, limit: int) -> List[Dict]
-   - parse_product_data(raw_data: Dict) -> ProductCreate
-   - normalize_price(price_str: str) -> float
-   - handle_rate_limits() -> decorator
-   - save_to_database(products: List[ProductCreate])
+   - parse_product_data(raw_data: Dict, category_name: str) -> Dict
+   - save_to_database(products: List[Dict], db: Session) -> int
    ```
 
-4. **Add API credentials to `.env`:**
+4. **Add API base URL to `.env`:**
    ```
-   RAPIDAPI_KEY=your_api_key_here
-   RAPIDAPI_HOST=real-time-amazon-data.p.rapidapi.com
+   DUMMYJSON_BASE_URL=https://dummyjson.com
    ```
 
 5. **Create Refresh Endpoint:**
-   - Add to `app/api/v1/endpoints/products.py`
+   - Add to `app/api/routes/products.py`
    ```python
    @router.post("/refresh")
    async def refresh_products():
@@ -112,32 +109,24 @@ This implementation plan outlines the step-by-step approach to complete the Deli
 
 6. **Implement Error Handling:**
    - API timeout handling
-   - Rate limit retry logic
    - Invalid data validation
    - Database transaction rollback
 
-7. **Seed Initial Data:**
-   ```bash
-   # Create seed script
-   touch app/scripts/seed_data.py
-   python app/scripts/seed_data.py
-   ```
-
 **Success Criteria:**
-- [ ] Data fetcher service implemented
-- [ ] API credentials configured
-- [ ] /api/v1/products/refresh endpoint functional
+- [x] Data fetcher service implemented
+- [x] API base URL configured
+- [x] /api/v1/products/refresh endpoint functional
 - [ ] Database populated with 50+ products
-- [ ] Products span 5+ categories
-- [ ] Error handling works (test with invalid API key)
+- [x] Products span 5+ categories
+- [x] Error handling works (fallback if API fails)
 - [ ] Logging shows fetch progress
 
-**Data Categories to Populate:**
-- Electronics (smartphones, laptops, tablets)
-- Home & Kitchen (appliances, cookware)
-- Books (bestsellers, technical)
-- Clothing (shirts, shoes, accessories)
-- Sports & Outdoors (fitness, camping)
+**Data Categories to Populate (DummyJSON slugs):**
+- smartphones
+- laptops
+- home-decoration
+- tops
+- sports-accessories
 
 ---
 
@@ -202,8 +191,7 @@ This implementation plan outlines the step-by-step approach to complete the Deli
 5. **Add Configuration:**
    ```python
    # .env
-   REFRESH_INTERVAL_HOURS=6
-   SCHEDULER_ENABLED=true
+   PRODUCT_REFRESH_HOURS=6
    ```
 
 6. **Implement Logging:**
@@ -215,13 +203,13 @@ This implementation plan outlines the step-by-step approach to complete the Deli
    ```
 
 **Success Criteria:**
-- [ ] APScheduler installed and configured
-- [ ] Scheduler starts with FastAPI application
+- [x] APScheduler installed and configured
+- [x] Scheduler starts with FastAPI application
 - [ ] First scheduled task runs successfully
-- [ ] Price history records created with timestamps
+- [x] Price history records created with timestamps
 - [ ] Logs show scheduled execution
-- [ ] Scheduler shuts down gracefully with app
-- [ ] Interval configurable via environment variable
+- [x] Scheduler shuts down gracefully with app
+- [x] Interval configurable via environment variable
 
 ---
 

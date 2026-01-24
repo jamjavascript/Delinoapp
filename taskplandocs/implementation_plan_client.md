@@ -1,20 +1,19 @@
-# Delinoapp Implementation Plan (Client Copy)
+# Delinoapp Implementation Plan
 
 ## Executive Summary
-Delinoapp is a full-stack product tracking application (FastAPI + Next.js + PostgreSQL).
-This plan outlines the remaining work in clear phases for client visibility.
+I have setup the repo and added docker for the database usage and easy to use.
 
-**Estimated Total Effort:** 33-44 hours  
-**Priority Focus:** Phase 1 and Phase 2
+**Estimated Total Effort:** 30 hours
 
 **Note on Data Sources:** We are currently using a fake public API (DummyJSON) for product data.
 Once real API credentials are available, we will switch and provide the full integration details.
 
 ---
+Here are the phases I will be able to deliver the app :
 
-## Phase 1: Core Integration (9-13 hours)
+## Phase 1: Core Integration 
 
-### 1.1 Database Setup & Connection (2-3 hours)
+### 1.1 Database Setup & Connection
 **Goal:** Reliable PostgreSQL connection with migrations applied.
 
 Key steps:
@@ -24,7 +23,7 @@ Key steps:
 
 **Deliverable:** Running backend connected to the database.
 
-### 1.2 API Data Integration (4-6 hours)
+### 1.2 API Data Integration
 **Goal:** Automated product ingestion into the database.
 
 Current approach:
@@ -34,7 +33,7 @@ Current approach:
 
 **Deliverable:** Refresh endpoint that loads products across multiple categories.
 
-### 1.3 Background Scheduler (3-4 hours)
+### 1.3 Background Scheduler
 **Goal:** Auto-refresh product data on a schedule.
 
 Key steps:
@@ -46,9 +45,9 @@ Key steps:
 
 ---
 
-## Phase 2: Frontend-Backend Integration (6-8 hours)
+## Phase 2: Frontend-Backend Integration
 
-### 2.1 API Client Setup (2-3 hours)
+### 2.1 API Client Setup
 **Goal:** Frontend data layer with typed, reliable API calls.
 
 Key steps:
@@ -58,7 +57,7 @@ Key steps:
 
 **Deliverable:** Frontend connected to backend endpoints.
 
-### 2.2 UI Functionality Enhancements (4-5 hours)
+### 2.2 UI Functionality Enhancements
 **Goal:** Complete end-user experience.
 
 Key steps:
@@ -72,19 +71,7 @@ Key steps:
 
 ---
 
-## Phase 3: Testing & QA (3-5 hours)
-**Goal:** Stability and confidence in core flows.
-
-Key steps:
-- Backend tests for API endpoints
-- Frontend component testing (critical UI pieces)
-- Manual QA checklist
-
-**Deliverable:** Verified workflows and reduced regression risk.
-
----
-
-## Phase 4: Deployment & Monitoring (4-6 hours)
+## Phase 3: Deployment & Monitoring
 **Goal:** Publicly accessible system with basic monitoring.
 
 Key steps:
@@ -97,7 +84,7 @@ Key steps:
 
 ---
 
-## Phase 5: Enhancements (5-8 hours)
+## Phase 4: Enhancements
 **Goal:** Optional features and refinements.
 
 Examples:

@@ -1,0 +1,16 @@
+[build]
+builder = "DOCKERFILE"
+dockerfilePath = "Dockerfile"
+
+[deploy]
+startCommand = "./start.sh"
+restartPolicyType = "ON_FAILURE"
+restartPolicyMaxRetries = 3
+
+# Health check configuration
+healthcheckPath = "/api/v1/health"
+healthcheckTimeout = 100
+
+# Resource limits optimized for free tier
+[[deploy.regions]]
+# Railway will use default region

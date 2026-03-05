@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { Product } from '@/types/product';
+import FavoriteButton from './FavoriteButton';
 
 interface ProductCardProps {
   product: Product;
@@ -7,8 +8,13 @@ interface ProductCardProps {
 
 export default function ProductCard({ product }: ProductCardProps) {
   return (
-    <Link href={`/product/${product.id}`}>
-      <div className="bg-white rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden h-full flex flex-col">
+    <div className="bg-white rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden h-full flex flex-col relative">
+      {/* Favorite Button */}
+      <div className="absolute top-2 right-2 z-10">
+        <FavoriteButton productId={product.id} size="sm" />
+      </div>
+
+      <Link href={`/product/${product.id}`} className="flex flex-col h-full">
         {/* Product Image */}
         <div className="relative h-48 bg-gray-100 flex items-center justify-center">
           {product.image_url ? (
@@ -19,6 +25,11 @@ export default function ProductCard({ product }: ProductCardProps) {
             />
           ) : (
             <div className="text-gray-400">No image</div>
+          )}
+          {product.deal_score != null && product.deal_score >= 70 && (
+            <span className="absolute top-2 left-2 bg-green-500 text-white text-xs font-bold px-2 py-0.5 rounded-full">
+              Great Deal
+            </span>
           )}
         </div>
 
@@ -48,7 +59,7 @@ export default function ProductCard({ product }: ProductCardProps) {
             )}
           </div>
         </div>
-      </div>
-    </Link>
+      </Link>
+    </div>
   );
 }

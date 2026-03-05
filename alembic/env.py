@@ -19,7 +19,11 @@ from app.models.price_history import PriceHistory
 config = context.config
 
 # Override the sqlalchemy.url from the config file with the one from settings
-config.set_main_option("sqlalchemy.url", settings.DATABASE_URL)
+# Fix DATABASE_URL for Railway compatibility (postgresql:// -> postgresql+psycopg://)
+database_url = settings.DATABASE_URL
+if database_url.startswith("postgresql://"):
+    database_url = database_url.replace("postgresql://", "postgresql+psycopg://", 1)
+config.set_main_option("sqlalchemy.url", database_url)
 
 # Interpret the config file for Python logging.
 # This line sets up loggers basically.
